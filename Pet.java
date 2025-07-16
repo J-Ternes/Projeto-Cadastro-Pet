@@ -1,6 +1,18 @@
 package DesafioCadastroPet;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -13,17 +25,19 @@ public class Pet {
     Scanner scanner = new Scanner(System.in);
     Formulario formulario = new Formulario();
     List<String> respostaEndereco = new ArrayList<String>();
+   public static final String  NAO_INFORMADO = "NÃO INFORMADO";
+   String numero;
+    StringBuilder conteudo = new StringBuilder();
 
     public void CadastrarNovoPet() {
         System.out.println("\nPara cadastrar um novo Pet, favor respoder as perguntas : ");
         List<String> perguntasFormulario = formulario.MostrarFormulario();
         try {
             for (String linhas : perguntasFormulario) {
-
                 if(linhas.equals(perguntasFormulario.get(3))){
                     System.out.println(linhas);
                     System.out.print("    i) Qual o número da casa que o cachorro mora: ");
-                    String numero = scanner.nextLine();
+                    numero = scanner.nextLine();
                     respostaEndereco.add(numero);
 
                     System.out.print("    ii) Qual a cidade que o cachorro mora: ");
@@ -45,12 +59,12 @@ public class Pet {
             }
 
             ArmazenarDados(respostasUsuario);
-        } catch (NumberFormatException ex) {
+        } catch (NumberFormatException | IOException ex) {
             ex.getStackTrace();
         }
     }
 
-    public void ArmazenarDados(List<String> dadoInformado) {
+    public void ArmazenarDados(List<String> dadoInformado) throws IOException {
         String nomeEsobrenome = respostasUsuario.get(0);
         adicionarNomeESobrenome(nomeEsobrenome);
 
@@ -60,7 +74,17 @@ public class Pet {
         String sexo = respostasUsuario.get(2);
         adicionarSexo(sexo);
 
-        Respostas(respostasUsuario);
+        Integer idade = Integer.parseInt(respostasUsuario.get(4));
+        adicionarIdade(idade);
+
+        Integer peso = Integer.parseInt(respostasUsuario.get(5));
+        adicionarPeso(peso);
+
+        String raca = respostasUsuario.get(6);
+        adicionarRaca(raca);
+
+
+        cadastrarPet(respostasUsuario);
     }
 
     public void adicionarTipo(String tipo) {
@@ -98,6 +122,7 @@ public class Pet {
             tipo = novaResposta;
         }
     }
+
     public void adicionarSexo(String sexo) {
         while (true) {
             try {
@@ -133,6 +158,7 @@ public class Pet {
             sexo = novaResposta;
         }
     }
+
     public void adicionarNomeESobrenome(String nomeESobrenome){
         while (true) {
             String[] verificarNomeESobrenome = nomeESobrenome.split(" ");
@@ -141,20 +167,113 @@ public class Pet {
             boolean verificador = matcher.find();
             if ((verificarNomeESobrenome.length > 1) && (verificador == true)) {
                 break;
-            } else
+            } else{
                 System.err.println("Favor, responder nome e sobrenome do Pet com um espaço entre eles e sem caracter especial!");
-            List<String> primeiraPergunta = formulario.MostrarFormulario();
-            System.out.println(primeiraPergunta.get(0));
-            String novaResposta = scanner.nextLine();
-            respostasUsuario.remove(0);
-            respostasUsuario.add(0, novaResposta);
+                List<String> primeiraPergunta = formulario.MostrarFormulario();
+                System.out.println(primeiraPergunta.get(0));
+                String novaResposta = scanner.nextLine();
+                respostasUsuario.remove(0);
+                respostasUsuario.add(0, novaResposta);
+                nomeESobrenome = novaResposta;
+            }
         }
     }
-    public void Respostas(List<String> resposta) {
-        for (String respostas : respostasUsuario) {
-            System.out.println(respostas);
+
+    public void adicionarPeso(Integer peso){
+        try{
+            while(true){
+                if(peso > 60 || peso < 0.5){
+                    System.err.println("Favor, digitar um peso entre 0.5 kg e 60 kg: ");
+                    List<String> sextaPergunta = formulario.MostrarFormulario();
+                    System.out.println(sextaPergunta.get(5));
+                    Integer novaResposta =  Integer.parseInt(scanner.nextLine());
+                    respostasUsuario.remove(5);
+                    respostasUsuario.add(5, novaResposta.toString());
+                }else
+                    break;
+            }
+        }catch(InputMismatchException e){
+            System.err.println("Favor, digitar um número referente ao peso do animal: ");
+            List<String> sextaPergunta = formulario.MostrarFormulario();
+            System.out.println(sextaPergunta.get(5));
+            Integer novaResposta =  Integer.parseInt(scanner.nextLine());
+            respostasUsuario.remove(5);
+            respostasUsuario.add(5, novaResposta.toString());
+            peso = novaResposta;
         }
+    }
+
+    public void adicionarIdade(Integer idade){
+        try{
+            while(true){
+                if(idade > 20){
+                    System.err.println("Favor, digitar uma idade até 20 anos: ");
+                    String quintaPergunta = respostasUsuario.get(4);
+                    System.out.println(quintaPergunta);
+                    Integer novaResposta = Integer.parseInt(scanner.nextLine());
+                    respostasUsuario.remove(4);
+                    respostasUsuario.add(4,novaResposta.toString());
+                    idade = novaResposta;
+                }else
+                    break;
+
+            }
+        }catch(InputMismatchException e){
+            System.err.println("Favor, digitar um número inteiro para a idade: ");
+            String quintaPergunta = respostasUsuario.get(4);
+            System.out.println(quintaPergunta);
+            Integer novaResposta = Integer.parseInt(scanner.nextLine());
+            respostasUsuario.remove(4);
+            respostasUsuario.add(4,novaResposta.toString());
+            idade = novaResposta;
+        }
+    }
+
+    public void adicionarRaca(String raca){
+        while(true) {
+            Pattern pattern = Pattern.compile("^[a-zA-Z ]+$"); //Irá verificar se existe apenas letras maiusculas ou minusculas
+            Matcher matcher = pattern.matcher(raca);
+            boolean verificador = matcher.find();
+            if (verificador == true) {
+                break;
+            }else {
+                System.err.println("Não é permitido usar números ou caracter especial ao informar a raça do animal");
+                System.out.println(respostasUsuario.get(6));
+                String novaResposta = scanner.nextLine();
+                respostasUsuario.remove(6);
+                respostasUsuario.add(6,novaResposta);
+                raca = novaResposta;
+        }
+        }
+    }
+
+    public void cadastrarPet(List<String> resposta) throws IOException {
+        Path arquivo = Paths.get("C:\\Desafio - cadastroPet");
+
+        LocalDate diaAtual = LocalDate.now();
+        DateTimeFormatter diaAtualFormatado = DateTimeFormatter.ofPattern("yyyMMdd");
+
+        LocalTime horaAtual = LocalTime.now();
+
+        Integer hora = horaAtual.getHour();
+        Integer minuto = horaAtual.getMinute();
+
+        String nome = respostasUsuario.get(0).replaceAll("\\s+","");
+        String nomeMaiusculo = nome.toUpperCase();
+
+        File novoArquivo = new File(arquivo.toFile(), diaAtualFormatado.format(diaAtual)+ "T" + hora + minuto + "-" + nomeMaiusculo + ".txt");
+        novoArquivo.createNewFile(); //Criei o arquivo
+
+        for(String linha : respostasUsuario){
+            int indice = respostasUsuario.indexOf(linha);
+            int indice2 = indice + 1;
+            conteudo.append((indice2 + " - ") + (linha + "\n"));
+            Files.write(novoArquivo.toPath(),conteudo.toString().getBytes(StandardCharsets.UTF_8),StandardOpenOption.CREATE);
+        }
+
+
     }
 }
+
 
 
