@@ -27,29 +27,21 @@ public class Pet {
             ex.getStackTrace();
         }
     }
-    public void ArmazenarDados (List<String> dadoInformado){
-        while(true){
-            String nomeESobrenome = dadoInformado.get(0);
-            String[] verificarNomeESobrenome = nomeESobrenome.split(" ");
-            Pattern pattern = Pattern.compile("^[a-zA-Z ]+$"); //Irá verificar se existe apenas letras maiusculas ou minusculas
-            Matcher matcher = pattern.matcher(nomeESobrenome);
-            boolean verificador = matcher.find();
-            if((verificarNomeESobrenome.length > 1) && (verificador == true)){
-                break;
-            }else
-                System.err.println("Favor, responder nome e sobrenome do Pet com um espaço entre eles e sem caracter especial!");
-            List<String> primeiraPergunta = formulario.MostrarFormulario();
-            System.out.println(primeiraPergunta.get(0));
-            String novaResposta = scanner.nextLine();
-            dadoInformado.remove(0);
-            dadoInformado.add(0,novaResposta);
-        }
+
+    public void ArmazenarDados(List<String> dadoInformado) {
+        String nomeEsobrenome = respostasUsuario.get(0);
+        adicionarNomeESobrenome(nomeEsobrenome);
 
         String tipo = respostasUsuario.get(1); //armazeno o tipo do animal informado pelo usuario
-        procurarTipo(tipo); // verificar se satisfaz algum valor do enum.
+        adicionarTipo(tipo); // verificar se satisfaz algum valor do enum.
+
+        String sexo = respostasUsuario.get(2);
+        adicionarSexo(sexo);
+
         Respostas(respostasUsuario);
-        }
-    public void procurarTipo (String tipo) {
+    }
+
+    public void adicionarTipo(String tipo) {
         while (true) {
             try {
                 if (tipo.equals("Cachorro")) {
@@ -84,12 +76,64 @@ public class Pet {
             tipo = novaResposta;
         }
     }
-    public void Respostas(List<String> resposta){
-        for(String respostas : respostasUsuario) {
+    public void adicionarSexo(String sexo) {
+        while (true) {
+            try {
+                if (sexo.equals("Macho") || sexo.equals("M")) {
+                    Sexo sexoCachorro = Sexo.MACHO;
+                    String sexoCachorroString = sexoCachorro.name();
+                    respostasUsuario.remove(2);
+                    respostasUsuario.add(2, sexoCachorroString);
+                    break;
+                }
+                if (sexo.equals("Femea") || sexo.equals("F")) {
+                    Sexo sexoCachorro = Sexo.FEMEA;
+                    String sexoCachorroString = sexoCachorro.name();
+                    respostasUsuario.remove(2);
+                    respostasUsuario.add(2, sexoCachorroString);
+                    break;
+                }
+            } catch (NullPointerException e) {
+                System.err.println("Favor, preencher com um valor não nulo (Macho/Femea): ");
+                List<String> terceiraPergunta = formulario.MostrarFormulario();
+                System.out.println(terceiraPergunta.get(2));
+                novaResposta = scanner.nextLine();
+                respostasUsuario.remove(2);
+                respostasUsuario.add(2, novaResposta);
+                sexo = novaResposta;
+            }
+            System.err.println("Favor, digitar o sexo do animal corretamente (Macho/Femea): ");
+            List<String> terceiraPergunta = formulario.MostrarFormulario();
+            System.out.println(terceiraPergunta.get(2));
+            novaResposta = scanner.nextLine();
+            respostasUsuario.remove(2);
+            respostasUsuario.add(2, novaResposta);
+            sexo = novaResposta;
+        }
+    }
+    public void adicionarNomeESobrenome(String nomeESobrenome){
+        while (true) {
+            String[] verificarNomeESobrenome = nomeESobrenome.split(" ");
+            Pattern pattern = Pattern.compile("^[a-zA-Z ]+$"); //Irá verificar se existe apenas letras maiusculas ou minusculas
+            Matcher matcher = pattern.matcher(nomeESobrenome);
+            boolean verificador = matcher.find();
+            if ((verificarNomeESobrenome.length > 1) && (verificador == true)) {
+                break;
+            } else
+                System.err.println("Favor, responder nome e sobrenome do Pet com um espaço entre eles e sem caracter especial!");
+            List<String> primeiraPergunta = formulario.MostrarFormulario();
+            System.out.println(primeiraPergunta.get(0));
+            String novaResposta = scanner.nextLine();
+            respostasUsuario.remove(0);
+            respostasUsuario.add(0, novaResposta);
+        }
+    }
+    public void Respostas(List<String> resposta) {
+        for (String respostas : respostasUsuario) {
             System.out.println(respostas);
         }
 
     }
-    }
+}
 
 
