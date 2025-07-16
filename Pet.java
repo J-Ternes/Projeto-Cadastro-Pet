@@ -189,8 +189,11 @@ public class Pet {
                     Integer novaResposta =  Integer.parseInt(scanner.nextLine());
                     respostasUsuario.remove(5);
                     respostasUsuario.add(5, novaResposta.toString());
-                }else
+                }else {
+                    String pesoCerto = peso + " kg";
+                    respostasUsuario.set(5,pesoCerto);
                     break;
+                }
             }
         }catch(InputMismatchException e){
             System.err.println("Favor, digitar um número referente ao peso do animal: ");
@@ -214,8 +217,12 @@ public class Pet {
                     respostasUsuario.remove(4);
                     respostasUsuario.add(4,novaResposta.toString());
                     idade = novaResposta;
-                }else
+                }else{
+                    String idadeCerta = idade + " anos";
+                    respostasUsuario.set(4,idadeCerta);
                     break;
+                }
+
 
             }
         }catch(InputMismatchException e){
