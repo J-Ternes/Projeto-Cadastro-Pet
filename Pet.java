@@ -7,21 +7,43 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Pet {
+
     String novaResposta;
     List<String> respostasUsuario = new ArrayList<String>();
     Scanner scanner = new Scanner(System.in);
     Formulario formulario = new Formulario();
+    List<String> respostaEndereco = new ArrayList<String>();
 
     public void CadastrarNovoPet() {
         System.out.println("\nPara cadastrar um novo Pet, favor respoder as perguntas : ");
         List<String> perguntasFormulario = formulario.MostrarFormulario();
         try {
             for (String linhas : perguntasFormulario) {
-                System.out.println(linhas);
-                System.out.print("Responda a pergunta a cima: ");
-                String resposta = scanner.nextLine();
-                respostasUsuario.add(resposta);
+
+                if(linhas.equals(perguntasFormulario.get(3))){
+                    System.out.println(linhas);
+                    System.out.print("    i) Qual o número da casa que o cachorro mora: ");
+                    String numero = scanner.nextLine();
+                    respostaEndereco.add(numero);
+
+                    System.out.print("    ii) Qual a cidade que o cachorro mora: ");
+                    String cidade = scanner.nextLine();
+                    respostaEndereco.add(cidade);
+
+                    System.out.print("    iii) Qual a rua que o cachorro mora: ");
+                    String rua = scanner.nextLine();
+                    respostaEndereco.add(rua);
+
+                    respostasUsuario.add(String.valueOf(("Rua " + respostaEndereco.get(2)) + ", " +
+                            respostaEndereco.get(0) + ", " + respostaEndereco.get(1)));
+                }else{
+                    System.out.println(linhas);
+                    System.out.print("Responda a pergunta a cima: ");
+                    String resposta = scanner.nextLine();
+                    respostasUsuario.add(resposta);
+                }
             }
+
             ArmazenarDados(respostasUsuario);
         } catch (NumberFormatException ex) {
             ex.getStackTrace();
@@ -132,7 +154,6 @@ public class Pet {
         for (String respostas : respostasUsuario) {
             System.out.println(respostas);
         }
-
     }
 }
 
