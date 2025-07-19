@@ -45,6 +45,13 @@ public class Menu {
                 Pet cadastroPet = new Pet();
                 cadastroPet.CadastrarNovoPet();
                 break;
+
+            case 2:
+                AlterarPet alterar = new AlterarPet();
+                Integer criterioSelecionado = alterar.menuCriterio();
+                alterar.realizarBusca(criterioSelecionado);
+                break;
+
         }
 
     }

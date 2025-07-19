@@ -255,7 +255,7 @@ public class Pet {
     }
 
     public void cadastrarPet(List<String> resposta) throws IOException {
-        Path arquivo = Paths.get("C:\\Desafio - cadastroPet");
+        Path arquivo = Paths.get("C:\\Desafio - cadastroPet\\AnimaisCadastrados");
 
         LocalDate diaAtual = LocalDate.now();
         DateTimeFormatter diaAtualFormatado = DateTimeFormatter.ofPattern("yyyMMdd");

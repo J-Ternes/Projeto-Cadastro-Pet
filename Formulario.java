@@ -17,7 +17,7 @@ public class Formulario {
         List<String> perguntasFormulario = new ArrayList<String>();
 
         try{
-            Path arquivo = Paths.get("C:\\Desafio - cadastroPet\\formulario.txt");
+            Path arquivo = Paths.get("C:\\Desafio - cadastroPet\\Formulario\\formulario.txt");
             List<String> conteudo = Files.readAllLines(arquivo);
             for(String linha : conteudo){
                 perguntasFormulario.add(linha);
